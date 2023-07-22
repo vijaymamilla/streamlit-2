@@ -6,7 +6,7 @@ st.set_page_config(
 )
 
 st.title("Home Page")
-st.image("app/artifactory/Home.jpeg", caption='', use_column_width=True)
+st.image("app/home.jpeg", caption='', use_column_width=True)
 
 st.header("The Problem")
 st.write("""The analysis of social media data during natural disasters can be challenging due to the sheer volume of data generated and the need to quickly identify relevant information. Additionally, tweets are often short, informal, and contain non-standard language, making them difficult to analyse using traditional NLP techniques. As a result, there is a need for more advanced NLP techniques that can accurately classify disaster-related tweets and extract relevant information in real-time.
