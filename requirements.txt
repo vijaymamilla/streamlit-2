@@ -1,0 +1,5 @@
+streamlit
+matplotlib
+scikit-learn==1.3.0
+category_encoders
+joblib
