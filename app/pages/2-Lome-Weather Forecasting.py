@@ -25,7 +25,7 @@ from tensorflow.keras.losses import MeanSquaredError
 from tensorflow.keras.metrics import MeanAbsoluteError
 
 from tensorflow.keras.layers import Dense, Conv1D, LSTM, Lambda, Reshape, RNN, LSTMCell
-from sklearn.preprocessing import MinMaxScaler
+
 
 import warnings
 
