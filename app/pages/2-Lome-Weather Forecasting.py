@@ -10,35 +10,25 @@ warnings.filterwarnings('ignore')
 
 tf.random.set_seed(42)
 np.random.seed(42)
-@st.cache_data
-def loadTrainDf():
-    train_df = pd.read_csv('app/artifactory/lome_train1.csv', index_col='date_time', parse_dates=True)
 
-    return train_df
-@st.cache_data
-def loadValDf():
-    val_df = pd.read_csv('app/artifactory/lome_val1.csv', index_col='date_time', parse_dates=True)
-    return val_df
 @st.cache_data
 def loadTestDf():
-    test_df = pd.read_csv('app/artifactory/lome_test1.csv', index_col='date_time', parse_dates=True)
+    test_df = pd.read_csv('app/artifactory/lome_test.csv', index_col='date_time', parse_dates=True)
 
     return test_df
 
-
 class DataWindow():
     def __init__(self, input_width, label_width, shift,
-                 train_df, val_df, test_df,
+                  test_df,
                  label_columns=None):
 
-        self.train_df = train_df
-        self.val_df = val_df
+
         self.test_df = test_df
 
         self.label_columns = label_columns
         if label_columns is not None:
             self.label_columns_indices = {name: i for i, name in enumerate(label_columns)}
-        self.column_indices = {name: i for i, name in enumerate(train_df.columns)}
+        self.column_indices = {name: i for i, name in enumerate(test_df.columns)}
 
         self.input_width = input_width
         self.label_width = label_width
@@ -81,14 +71,6 @@ class DataWindow():
         return ds
 
     @property
-    def train(self):
-        return self.make_dataset(self.train_df)
-
-    @property
-    def val(self):
-        return self.make_dataset(self.val_df)
-
-    @property
     def test(self):
         return self.make_dataset(self.test_df)
 
@@ -102,7 +84,7 @@ def buildLstmModel():
 
 
 def buildDataFrame(days:int):
-    custom_mo_wide_window = DataWindow(input_width=days, label_width=days, shift=days,train_df=loadTrainDf(), val_df=loadValDf(), test_df=loadTestDf(),
+    custom_mo_wide_window = DataWindow(input_width=days, label_width=days, shift=days, test_df=loadTestDf(),
                                        label_columns=['precipitation_sum (mm)', 'rain_sum (mm)', 'river_discharge',
                                                       'intensity_rain', 'intensity_flood', 'intensity_drought'])
     #input_indices = custom_mo_wide_window.input_indices
