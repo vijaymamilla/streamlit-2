@@ -172,9 +172,7 @@ class Baseline(Model):
         return result[:, :, tf.newaxis]
 
 
-mo_single_step_window = DataWindow(input_width=1, label_width=1, shift=1,
-                                   label_columns=['precipitation_sum (mm)', 'rain_sum (mm)', 'river_discharge',
-                                                  'intensity_rain', 'intensity_flood', 'intensity_drought'])
+
 mo_wide_window = DataWindow(input_width=14, label_width=14, shift=1,
                             label_columns=['precipitation_sum (mm)', 'rain_sum (mm)', 'river_discharge',
                                            'intensity_rain', 'intensity_flood', 'intensity_drought'])
@@ -190,13 +188,20 @@ def compile_and_fit(model, window, patience=3, max_epochs=50):
                   optimizer=Adam(),
                   metrics=[MeanAbsoluteError()])
 
-    history = model.fit(window.train,
-                        epochs=max_epochs,
-                        validation_data=window.val,
-                        callbacks=[early_stopping])
+    history = model.fit(window.train,epochs=max_epochs,validation_data=window.val,callbacks=[early_stopping])
 
-    return history
+    return model
+@st.cache_resource
+def buildDenseModel():
+    mo_dense = Sequential([
+        Dense(units=64, activation='relu'),
+        Dense(units=64, activation='relu'),
+        Dense(units=6, activation='relu')
+    ])
 
+    history = compile_and_fit(mo_dense, mo_wide_window)
+
+    return mo_dense
 
 @st.cache_resource
 def buildLstmModel():
