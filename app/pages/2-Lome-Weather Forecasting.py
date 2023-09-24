@@ -10,13 +10,13 @@ warnings.filterwarnings('ignore')
 tf.random.set_seed(42)
 np.random.seed(42)
 
+def header():
+    st.header("Lome Weather Forecasting")
 
 @st.cache_data
 def load_test_df():
     test_df = pd.read_csv('app/artifactory/lome_test.csv', index_col='date_time', parse_dates=True)
-
     return test_df
-
 
 @st.cache_resource
 def build_lstm_model():
@@ -24,7 +24,21 @@ def build_lstm_model():
 
     return new_model
 
+def show_search_query():
+    query = st.number_input("Enter Number of days ",min_value=1,max_value=100,value=14,step=1)
 
+    if query:
+        days = query
+        new_df = predict(days)
+        new_df['precipitation_sum (mm)'] = new_df['precipitation_sum (mm)'].apply(lambda x: round(x, 2))
+        new_df['rain_sum (mm)'] = new_df['rain_sum (mm)'].apply(lambda x: round(x, 1))
+        new_df['river_discharge'] = new_df['river_discharge'].astype(int)
+        new_df['intensity_rain'] = new_df['intensity_rain'].astype(int)
+        new_df['intensity_flood'] = new_df['intensity_flood'].astype(int)
+        new_df['intensity_drought'] = new_df['intensity_drought'].astype(int)
+        new_df.index = new_df.index+1
+        st.write(str(days)+" days weather forecast")
+        st.table(new_df)
 class DataWindow:
     def __init__(self, input_width, label_width, shift, test_df, label_columns=None):
         self.test_df = test_df
@@ -73,24 +87,25 @@ class DataWindow:
     def test(self):
         return self.make_dataset(self.test_df)
 
-
-def build_data_frame(days: int):
+def predict(days: int):
     custom_mo_wide_window = DataWindow(input_width=days, label_width=days, shift=days, test_df=load_test_df(),
                                        label_columns=['precipitation_sum (mm)', 'rain_sum (mm)', 'river_discharge',
                                                       'intensity_rain', 'intensity_flood', 'intensity_drought'])
 
     predicted_results = build_lstm_model().predict(custom_mo_wide_window.test)
     predicted_array = predicted_results[0]
+    predicted_array = np.array(predicted_array)
+    df = pd.DataFrame(predicted_array)
+    df_days = df.rename(
+        columns={0: "precipitation_sum (mm)", 1: "rain_sum (mm)", 2: "river_discharge", 3: "intensity_rain",
+                 4: "intensity_flood", 5: "intensity_drought"})
 
-    my_array = np.array(predicted_array)
-
-    df = pd.DataFrame(my_array)
-
-    df2 = df.rename(columns={0: "precipitation_sum (mm)", 1: "rain_sum (mm)", 2: "river_discharge", 3: "intensity_rain",
-                             4: "intensity_flood", 5: "intensity_drought"})
-
-    st.write("14 days forecast")
-    st.dataframe(df2)
+    return df_days
 
 
-build_data_frame(14)
+def main():
+    header()
+    show_search_query()
+
+
+main()
