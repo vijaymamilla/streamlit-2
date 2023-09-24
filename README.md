@@ -1,4 +1,4 @@
-# Cloud URL - https://app-2-tweets-classification.streamlit.app/
+# Cloud URL - https://app-togo-wether.streamlit.app/
 
 # Streamlit Project with Machine Learning Models and AWS Docker Deployment
 

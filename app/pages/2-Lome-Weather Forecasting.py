@@ -225,8 +225,8 @@ my_array = np.array(predicted_array)
 
 df = pd.DataFrame(my_array)
 
-#df2 = df.rename(columns={0: "precipitation_sum (mm)", 1: "rain_sum (mm)", 2: "river_discharge", 3: "intensity_rain",4: "intensity_flood", 5: "intensity_drought"})
+df2 = df.rename(columns={0: "precipitation_sum (mm)", 1: "rain_sum (mm)", 2: "river_discharge", 3: "intensity_rain",4: "intensity_flood", 5: "intensity_drought"})
 
 #df2.head(14)
 st.write("14 days forecast")
-st.dataframe(df)
+st.dataframe(df2)
