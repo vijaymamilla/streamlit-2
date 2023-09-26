@@ -1,4 +1,4 @@
-# Cloud URL - https://app-togo-wether.streamlit.app/
+# Cloud URL - https://app-togo-weather.streamlit.app/
 
 # Streamlit Project with Machine Learning Models and AWS Docker Deployment
 

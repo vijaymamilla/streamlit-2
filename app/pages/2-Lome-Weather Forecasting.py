@@ -105,6 +105,7 @@ def predict(days: int):
 
 def main():
     header()
+    predict(14) # model is compiled with 14 days, i am using default value as 14 days
     show_search_query()
 
 
